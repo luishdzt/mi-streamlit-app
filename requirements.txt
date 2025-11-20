@@ -1,8 +1,7 @@
-streamlit>=1.38.0
-pandas>=2.0.0
-numpy>=1.26.0
+streamlit>=1.37.0
 yfinance>=0.2.40
-plotly>=5.20.0
-python-dotenv>=1.0.0
-openai>=1.40.0
-
+pandas>=2.2.2
+numpy>=1.26.4
+plotly>=5.22.0
+python-dotenv>=1.0.1
+openai>=1.30.0
