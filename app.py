@@ -14,23 +14,32 @@ from openai import OpenAI
 # Carga del .env y configuración de OpenAI
 # =============================
 
-# Ruta absoluta al .env en la misma carpeta que app.py
+# 1) Cargar .env (para ambiente local)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 dotenv_path = os.path.join(BASE_DIR, ".env")
 load_dotenv(dotenv_path=dotenv_path)
 
+# 2) Intentar leer primero de variables de entorno (local)
 api_key = os.getenv("OPENAI_API_KEY")
 
+# 3) Si no hay nada, intentar leer de st.secrets (nube)
+if not api_key:
+    try:
+        api_key = st.secrets.get("OPENAI_API_KEY", None)
+    except Exception:
+        api_key = None
+
+# 4) Validar que efectivamente tenemos API key
 if not api_key:
     st.error(
         "No se encontró la variable OPENAI_API_KEY.\n\n"
         "Verifica que:\n"
-        "- Exista un archivo .env en la MISMA carpeta que app.py\n"
-        "- Contenga la línea: OPENAI_API_KEY=tu_key_aquí\n"
-        "- Estás ejecutando `streamlit run app.py` desde esta carpeta."
+        "- Local: exista un archivo .env en la MISMA carpeta que app.py con OPENAI_API_KEY=tu_key\n"
+        "- Nube: hayas configurado OPENAI_API_KEY en Settings → Secrets de la app."
     )
     st.stop()
 
+# 5) Crear cliente de OpenAI usando explícitamente la API key
 client = OpenAI(api_key=api_key)
 
 # =============================
